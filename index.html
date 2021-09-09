@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="dist/reset.css" />
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/white.css" />
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1 class="r-fit-text">
+            Тестируем подходы <br />
+            к тестированию
+          </h1>
+        </section>
+        <section>
+          <p>Личные грабли при написании тестов разработчиком</p>
+        </section>
+        <section>
+          <h3>План</h3>
+          <ul>
+            <li class="fragment">Про меня и автотесты</li>
+            <li class="fragment">Unit</li>
+            <li class="fragment">E2E</li>
+            <li class="fragment">Выводы</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Мое понимание</h2>
+        </section>
+        <section>
+          <h3>Автотесты это автоматизация</h3>
+        </section>
+        <section>
+          <p>Зачем нужны тесты?</p>
+        </section>
+        <section>
+          <h3>Очевидное</h3>
+          <ul>
+            <li class="fragment">Автоматизация регрессии</li>
+            <li class="fragment">Поиск новых багов</li>
+            <li class="fragment">Повышение качества кода</li>
+            <li class="fragment">Документация</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Неочевидное</h3>
+          <ul>
+            <li class="fragment">Понять (и простить) реквест</li>
+            <li class="fragment">Онбординг</li>
+            <li class="fragment">Разработка в изоляции</li>
+          </ul>
+        </section>
+        <section>Хаос в терминах</section>
+        <section>
+          <p>Какой тест модульный?</p>
+          <div class="fragment">
+            <pre><code data-trim>
+it("adds 1 + 2 to equal 3, o rly", () =&gt; {
+  expect(sum(1, 2)).toBe(3);
+});
+          </code></pre>
+          </div>
+        </section>
+        <section>
+          <p>А этот модульный?</p>
+          <pre><code data-trim>
+it("Должен рендерить приветствие, но непонятно нахрена", () =&gt; {
+  act(() =&gt; {
+    render(&lt;Hello name="Margaret" /&gt;, container);
+  });
+  expect(container.textContent).toBe("Hello, Margaret!");
+});
+          </code></pre>
+        </section>
+        <section>
+          <p>А этот?</p>
+          <pre><code data-trim>
+// Долбанное поле чудес
+test("Должен загрузить привет", async () =&gt; {
+  render(&lt;Fetch url="/greeting" /&gt;)
+
+  fireEvent.click(screen.getByText('Load Greeting'))
+
+  await waitFor(() =&gt; screen.getByRole('heading'))
+
+  expect(screen.getByRole('heading')).toHaveTextContent('hello there')
+  expect(screen.getByRole('button')).toBeDisabled()
+})
+          </code></pre>
+        </section>
+        <section>
+          <p>Шкала</p>
+          <img src="img/scale.png" alt="" />
+        </section>
+        <section>
+          <h2>Хорошие тесты</h2>
+        </section>
+        <section>
+          <h2>Модульные тесты</h2>
+        </section>
+        <section>
+          <h3>Первый опыт</h3>
+        </section>
+        <section>
+          <p>Надежность</p>
+          <pre><code data-trim>
+function isValidEmail(email) {
+    const re = /^.../;
+    return re.test(String(email).toLowerCase());
+}
+          </code></pre>
+          <pre class="fragment"><code data-trim>
+test("Should return true on hello@example.com", () =&gt;
+  expect(isValidEmail("hello@example.com"))
+    .toEqual(true);
+)
+          </code></pre>
+        </section>
+        <section>
+          <pre><code data-trim data-line-numbers="1-11|1-6|6-11">
+[
+  'hello@hello.com',
+  'superpuper@hello.com',
+  'blblblbl@hello.ru',
+  'русскоеимя@изроссии.рф',
+].forEach((item) =&gt; {
+  test("Should return true on ${item}", () =&gt;
+    expect(isValidEmail(item))
+      .toEqual(true);
+  )
+});
+          </code></pre>
+        </section>
+        <section>
+          <pre><code data-trim data-line-numbers="8-21|8|1-6|16-20|17|18|11-13">
+const defaultItems = [
+  'react',
+  'angular',
+  'vuejs',
+  'svelte'
+];
+
+export const Frameworks = (items = defaultItems) =&gt; {
+  const [value, setValue] = useState('');
+
+  const filteredItems = items
+    .filter((item) =&gt; item.includes(value))
+    .map((item) =&gt; &lt;li key={item}&gt;{item}&lt;/li&gt;);
+
+  return (
+    &lt;form&gt;
+      &lt;input type="text" onChange={(e) =&gt; setValue(e.target.value)} /&gt;
+      {filteredItems}
+    &lt;/form&gt;
+  );
+};
+          </code></pre>
+        </section>
+        <section>
+          <p>Как выглядит тест</p>
+          <pre><code data-trim>
+test('should work', () =&gt; {
+	const wrapper = shallow(&lt;FilterForm /&gt;);
+
+	expect(wrapper.find('li').length).to.equal(4);
+
+	wrapper.find('input').simulate('change', {target: {value: 'react'}});
+
+	expect(wrapper.find('li').length).to.equal(1);
+});
+          </code></pre>
+        </section>
+        <section>
+          <p>Что тестируем на самом деле</p>
+          <pre><code data-trim>
+.filter(e =&gt; e.includes(this.state.value))
+          </code></pre>
+        </section>
+        <section>
+          <p>Как можно переписать</p>
+          <pre><code data-trim>
+export function filter(list, value){
+	return list.filter(e =&gt; e.includes(value))
+}
+          </code></pre>
+          <pre class="fragment"><code data-trim>
+expect(filter(list, "react").length).to.equal(1);
+          </code></pre>
+        </section>
+        <section>
+          <p>Покрытие, 100% покрытие</p>
+        </section>
+        <section>
+          <pre><code data-trim>
+import axios from 'axios';
+
+export default axios.create({
+  baseURL: 'http://jsonplaceholder.typicode.com/'
+});
+          </code></pre>
+          <pre class="fragment"><code data-trim>
+export default ({baseURL}) =&gt; axios.create({
+  baseURL,
+});
+          </code></pre>
+          <pre class="fragment"><code data-trim data-line-numbers="1-5|3">
+export default ({baseURL}) =&gt; {
+  const instanse = axios.create({ baseURL,})
+  axios.interceptors.response.use(on401error);
+  return instanse;
+};
+          </code></pre>
+        </section>
+        <section>Snapshots</section>
+        <section>
+          <pre><code>
+it('renders correctly', () =&gt; {
+  const tree = renderer
+    .create(&lt;Link page="http://www.facebook.com"&gt;Facebook&lt;/Link&gt;)
+    .toJSON();
+  expect(tree).toMatchSnapshot();
+});
+          </code></pre>
+        </section>
+        <section></section>
+        <section>
+          <section>TDD + pair programming</section>
+          <section>
+            <ul>
+              <li>Создать тест</li>
+              <li>Убедиться, что тест упал</li>
+              <li>Внести изменения</li>
+              <li>Убедиться что тест прошел</li>
+              <li>Провести рефакторинг для устранения дублирования</li>
+            </ul>
+          </section>
+          <section>
+            <p>Плюсы</p>
+            <ul>
+              <li class="fragment">
+                Прикольно (чувствуешь себя магом и хорошим человеком)
+              </li>
+              <li class="fragment">
+                Думаешь о кейсах, о которых раньше не думал
+              </li>
+              <li class="fragment">
+                Документация к пулреквесту всегда в наличии
+              </li>
+              <li class="fragment">Пишешь модульно</li>
+              <li class="fragment">Можно рефакторить надежно</li>
+            </ul>
+          </section>
+          <section>
+            <p>Минусы</p>
+            <ul>
+              <li class="fragment">Требует изменения в мозгах</li>
+              <li class="fragment">
+                Плохо подходит для больших кодовых баз и больших команд
+              </li>
+              <li class="fragment">Плохо подходит для стартапов</li>
+              <li class="fragment">
+                Не избавляет от необходимости проектирование / иногда мешает
+              </li>
+              <li class="fragment">Растет кодовая база</li>
+            </ul>
+          </section>
+          <section>Тесты вперед != TDD</section>
+        </section>
+        <section>Тест на каждый баг</section>
+        <section>PropertyBased тестирование</section>
+        <section>Качетво тестов и покрытие (кейс гугл)</section>
+        <section>
+          <p>Вывод</p>
+          <ul>
+            <li class="fragment">Полезны</li>
+            <li class="fragment">Покрытие иногда помогает, иногда нет</li>
+            <li class="fragment">
+              Тесты ничего не говорят как работает приложение в целом (если ли в
+              приложении баги)
+            </li>
+          </ul>
+        </section>
+        <section>
+          <p>Как делаю я</p>
+          <ul>
+            <li class="fragment">Сначала проектирую</li>
+            <li class="fragment">Тесты вперед</li>
+            <li class="fragment">Использую Wallaby.js</li>
+            <li class="fragment">React Testing Library или аналог</li>
+            <li class="fragment">Тесты на бизнес логику</li>
+          </ul>
+        </section>
+        <section>
+          <h2>E2E</h2>
+        </section>
+        <section>Сначала были написаны тест кейсы, потом автоматизация</section>
+        <section>
+          <p>Результаты</p>
+          <ul>
+            <li class="fragment">надежно</li>
+            <li class="fragment">много мигающих тестов</li>
+            <li class="fragment">большой объем работы</li>
+            <li class="fragment">в целом довольный бизнес</li>
+            <li class="fragment">расходы на поддержку</li>
+          </ul>
+        </section>
+        <section>
+          <p>Все тестировалось сразу, тесты были частью задач</p>
+        </section>
+        <section>
+          <ul>
+            <li>Классный старт</li>
+            <li>Боль и мучения из-за мигающих тестов</li>
+          </ul>
+        </section>
+        <section>
+          <p>Достоинства</p>
+          <ul>
+            <li class="fragment">Онбординг</li>
+            <li class="fragment">Надежность</li>
+            <li class="fragment">Вовлеченность в бизнес</li>
+          </ul>
+        </section>
+        <section>
+          <p>Недостатки</p>
+          <ul>
+            <li class="fragment">Пишут как юнит тесты, большая сюита</li>
+            <li class="fragment">Никак не проверяет качество кода</li>
+            <li class="fragment">Разработчики бояться удалться</li>
+            <li class="fragment">
+              Могут написать не все необходимые тесты (нет знаний которые нужны
+              для QA)
+            </li>
+          </ul>
+        </section>
+        <section>
+          <p>Я</p>
+          <ul>
+            <li class="fragment">Использую playwright</li>
+            <li class="fragment">Мокаю сервер</li>
+            <li class="fragment">Проверяю только то, что не проверил unit</li>
+            <li class="fragment">Учу теорию тестирования (инструменты)</li>
+            <li class="fragment">
+              Были бы ресурсы, нанял бы QA + QA automation
+            </li>
+          </ul>
+        </section>
+        <section>
+          <p>Выводы</p>
+          <ul>
+            <li class="fragment">От ручных QA никуда не деться.</li>
+            <li class="fragment">
+              Настоящих не бывает или они стоят как крыло от самолета
+            </li>
+            <li class="fragment">
+              Нужно работать очень близко с QA, чтобы не тестировать одно и тоже
+            </li>
+          </ul>
+        </section>
+        <section>
+          <h2>Верификация</h2>
+          <ul>
+            <li class="fragment">Статический анализ</li>
+            <li class="fragment">Проверка модели (конечные автоматы)</li>
+            <li class="fragment">Automated theorem proving</li>
+          </ul>
+          <p class="fragment">Никто не берет ответсвенность</p>
+        </section>
+        <section>
+          <p>Что я думаю по поводу тестовой пирамиды</p>
+          <img src="img/py.jpeg" alt="" />
+        </section>
+        <section>Вместо вывода</section>
+        <section>
+          <p>Информация которую нужно понимать до</p>
+          <ul>
+            <li class="fragment">Размер кодовой базы</li>
+            <li class="fragment">Размер команды</li>
+            <li class="fragment">
+              Планы на развитие (сделали и забили, постоянно развиваем)
+            </li>
+            <li class="fragment">Библиотека или приложение</li>
+            <li class="fragment">Микро сервисы или монолит</li>
+            <li class="fragment">Бюджет на тестирование</li>
+          </ul>
+        </section>
+        <section>Спасибо!</section>
+      </div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        slideNumber: true,
+        hash: true,
+        margin: 0.01,
+        minScale: 0.2,
+        maxScale: 5.0,
+        margin: 0.04,
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+      });
+    </script>
+  </body>
+</html>
