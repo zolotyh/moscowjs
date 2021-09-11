@@ -19,25 +19,26 @@ $mainColor: #222;
 $headingColor: #222;
 
 $mainFontSize: 42px;
-$mainFont: -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', Geneva,
-  'Noto Sans Armenian', 'Noto Sans Bengali', 'Noto Sans Cherokee',
-  'Noto Sans Devanagari', 'Noto Sans Ethiopic', 'Noto Sans Georgian',
-  'Noto Sans Hebrew', 'Noto Sans Kannada', 'Noto Sans Khmer', 'Noto Sans Lao',
-  'Noto Sans Osmanya', 'Noto Sans Tamil', 'Noto Sans Telugu', 'Noto Sans Thai',
-  sans-serif, arial, Tahoma, verdana;
-$headingFont: -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue',
-  Geneva, 'Noto Sans Armenian', 'Noto Sans Bengali', 'Noto Sans Cherokee',
-  'Noto Sans Devanagari', 'Noto Sans Ethiopic', 'Noto Sans Georgian',
-  'Noto Sans Hebrew', 'Noto Sans Kannada', 'Noto Sans Khmer', 'Noto Sans Lao',
-  'Noto Sans Osmanya', 'Noto Sans Tamil', 'Noto Sans Telugu', 'Noto Sans Thai',
-  sans-serif, arial, Tahoma, verdana;
+$mainFont: 'Roboto Slab', -apple-system, BlinkMacSystemFont, 'Roboto',
+  'Helvetica Neue', Geneva, 'Noto Sans Armenian', 'Noto Sans Bengali',
+  'Noto Sans Cherokee', 'Noto Sans Devanagari', 'Noto Sans Ethiopic',
+  'Noto Sans Georgian', 'Noto Sans Hebrew', 'Noto Sans Kannada',
+  'Noto Sans Khmer', 'Noto Sans Lao', 'Noto Sans Osmanya', 'Noto Sans Tamil',
+  'Noto Sans Telugu', 'Noto Sans Thai', sans-serif, arial, Tahoma, verdana;
+$headingFont: 'Roboto Slab', -apple-system, BlinkMacSystemFont, 'Roboto',
+  'Helvetica Neue', Geneva, 'Noto Sans Armenian', 'Noto Sans Bengali',
+  'Noto Sans Cherokee', 'Noto Sans Devanagari', 'Noto Sans Ethiopic',
+  'Noto Sans Georgian', 'Noto Sans Hebrew', 'Noto Sans Kannada',
+  'Noto Sans Khmer', 'Noto Sans Lao', 'Noto Sans Osmanya', 'Noto Sans Tamil',
+  'Noto Sans Telugu', 'Noto Sans Thai', sans-serif, arial, Tahoma, verdana;
 $headingTextShadow: none;
 $headingLetterSpacing: normal;
 $headingTextTransform: uppercase;
-$headingFontWeight: 600;
-$linkColor: #2a76dd;
+$headingFontWeight: 300;
+$linkColor: #d5c011;
 $linkColorHover: lighten($linkColor, 15%);
 $selectionBackgroundColor: lighten($linkColor, 25%);
+$codeFont: 'JetBrains Mono', monospace;
 
 $heading1Size: 1.5em;
 $heading2Size: 1.6em;

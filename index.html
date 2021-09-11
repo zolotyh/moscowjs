@@ -9,12 +9,15 @@
 
     <title>reveal.js</title>
 
+    <link rel="stylesheet" href="fonts/RobotoSlab.css" />
+    <link rel="stylesheet" href="fonts/JetBrainsMono.css" />
     <link rel="stylesheet" href="dist/reset.css" />
     <link rel="stylesheet" href="dist/reveal.css" />
     <link rel="stylesheet" href="dist/theme/white.css" />
 
     <!-- Theme used for syntax highlighted code -->
-    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+    <link rel="stylesheet" href="plugin/highlight/stackoverflow.css" />
+    <!--<link rel="stylesheet" href="plugin/highlight/xcode.css" />-->
   </head>
   <body>
     <div class="reveal">
@@ -38,13 +41,10 @@
           </ul>
         </section>
         <section>
-          <h2>Мое понимание</h2>
+          <h2 class="r-fit-text">1. Мое понимание</h2>
         </section>
         <section>
-          <h3>Автотесты это автоматизация</h3>
-        </section>
-        <section>
-          <p>Зачем нужны тесты?</p>
+          <p>Автотесты это автоматизация</p>
         </section>
         <section>
           <h3>Очевидное</h3>
@@ -68,7 +68,7 @@
           <p>Какой тест модульный?</p>
           <div class="fragment">
             <pre><code data-trim>
-it("adds 1 + 2 to equal 3, o rly", () =&gt; {
+it("1 плюс 2 равно 3", () =&gt; {
   expect(sum(1, 2)).toBe(3);
 });
           </code></pre>
@@ -77,7 +77,7 @@ it("adds 1 + 2 to equal 3, o rly", () =&gt; {
         <section>
           <p>А этот модульный?</p>
           <pre><code data-trim>
-it("Должен рендерить приветствие, но непонятно нахрена", () =&gt; {
+it("Поле чудес! Передаем приветы!", () =&gt; {
   act(() =&gt; {
     render(&lt;Hello name="Margaret" /&gt;, container);
   });
@@ -88,8 +88,7 @@ it("Должен рендерить приветствие, но непонят�
         <section>
           <p>А этот?</p>
           <pre><code data-trim>
-// Долбанное поле чудес
-test("Должен загрузить привет", async () =&gt; {
+test("Поле чудес! Теперь async", async () =&gt; {
   render(&lt;Fetch url="/greeting" /&gt;)
 
   fireEvent.click(screen.getByText('Load Greeting'))
@@ -106,13 +105,19 @@ test("Должен загрузить привет", async () =&gt; {
           <img src="img/scale.png" alt="" />
         </section>
         <section>
-          <h2>Хорошие тесты</h2>
+          <h4>Хорошие тесты</h4>
+          <ul>
+            <li class="fragment">
+              Падают там, где действительно есть проблема
+            </li>
+            <li class="fragment">Стоят дешево</li>
+          </ul>
         </section>
         <section>
-          <h2>Модульные тесты</h2>
+          <h2 class="r-fit-text">2. Модульные тесты</h2>
         </section>
         <section>
-          <h3>Первый опыт</h3>
+          <h4>Лиха беда</h4>
         </section>
         <section>
           <p>Надежность</p>
@@ -171,15 +176,18 @@ export const Frameworks = (items = defaultItems) =&gt; {
         </section>
         <section>
           <p>Как выглядит тест</p>
-          <pre><code data-trim>
+          <pre><code data-trim data-line-numbers="1-9|2|4|6-9|11">
 test('should work', () =&gt; {
-	const wrapper = shallow(&lt;FilterForm /&gt;);
+  const wrapper = shallow(&lt;FilterForm /&gt;);
 
-	expect(wrapper.find('li').length).to.equal(4);
+  expect(wrapper.find('li').length).to.equal(4);
 
-	wrapper.find('input').simulate('change', {target: {value: 'react'}});
+  wrapper.find('input')
+    .simulate('change', {
+        target: {value: 'react'}
+    });
 
-	expect(wrapper.find('li').length).to.equal(1);
+  expect(wrapper.find('li').length).to.equal(1);
 });
           </code></pre>
         </section>
@@ -192,40 +200,120 @@ test('should work', () =&gt; {
         <section>
           <p>Как можно переписать</p>
           <pre><code data-trim>
-export function filter(list, value){
+const filter = (list, value) =&gt; {
 	return list.filter(e =&gt; e.includes(value))
 }
           </code></pre>
           <pre class="fragment"><code data-trim>
-expect(filter(list, "react").length).to.equal(1);
+expect(filter(list, "react").length)
+  .to.equal(1);
           </code></pre>
         </section>
         <section>
-          <p>Покрытие, 100% покрытие</p>
+          <p>SO из SOLID</p>
+          <pre><code data-trim data-line-numbers="1-8|3-5">
+const filter = (list, value) =&gt; {
+  return list.filter(e =&gt; {
+    if(isBlackListed(e)){
+      return false;
+    }
+    return e.includes(value)
+  })
+}
+          </code></pre>
+          <pre class="fragment"><code data-trim data-line-numbers="1-8|1|4|6-7">
+jest.mock('./isBackListed');
+
+it("...", () =&gt; {
+  isBlackListed.mockReturnedValue(false);
+
+  expect(filter(list, "react").length)
+    .to.equal(0);
+})
+          </code></pre>
         </section>
         <section>
+          <p>I из SOLID</p>
           <pre><code data-trim>
-import axios from 'axios';
-
-export default axios.create({
-  baseURL: 'http://jsonplaceholder.typicode.com/'
-});
+const foo = (settings) =&gt; {
+  const hasPermissions = settings
+    .profile
+    .permissions
+    .indexOf('readItems') !== -1;
+  ...
+}
           </code></pre>
           <pre class="fragment"><code data-trim>
-export default ({baseURL}) =&gt; axios.create({
-  baseURL,
-});
+const mockSettings = {
+  profile: {
+    permissions: ['readItems']
+  }
+}
           </code></pre>
-          <pre class="fragment"><code data-trim data-line-numbers="1-5|3">
-export default ({baseURL}) =&gt; {
+        </section>
+        <section>
+          <p>I из SOLID</p>
+          <pre><code data-trim>
+const foo = ({isAbleToRead}) =&gt; {/*...*/}
+          </code></pre>
+        </section>
+        <section>
+          <p>Покрытие</p>
+          <img src="img/coverage.png" alt="" />
+        </section>
+        <section>
+          <p>Нужно ли покрывать эту функцию?</p>
+          <pre><code data-trim>
+const setUpAxios =  ({ baseURL }) =&gt; {
+
   const instanse = axios.create({ baseURL,})
+
   axios.interceptors.response.use(on401error);
+
   return instanse;
 };
           </code></pre>
         </section>
-        <section>Snapshots</section>
         <section>
+          <p>От таких тестов больше проблем</p>
+          <pre><code class="javascript" data-trim>
+jest.mock('axios');
+...
+axiosInterceptorMock = jest.fn();
+
+const mock = {
+  interceptors: {
+    response: {
+      push: axiosInterceptorMock,
+    }
+  }
+}
+
+axios.createInstance.mockReturnedValue(mock);
+expect(axiosInterceptorMock).toHaveBeenCalled();
+          </code></pre>
+        </section>
+        <!--<section>-->
+        <!--<pre><code data-trim>-->
+        <!--export const Button = ({ buttonType, children,  ...props }) =&gt; {-->
+        <!--return (-->
+        <!--&lt;button-->
+        <!--className={classNames({ [buttonType]: true, })}-->
+        <!--{...props}-->
+        <!--&gt;-->
+        <!--{ children }-->
+        <!--&lt;/button&gt;-->
+        <!--);-->
+        <!--};-->
+        <!--</code></pre>-->
+        <!--</section>-->
+        <section>
+          <p>Не нужно тестировать имплементацию, нужно тестировать контракт</p>
+          <p class="fragment">Не нужно тестировать тем где не тестируется</p>
+        </section>
+        <section>Принцип Питера</section>
+        <section>
+          <p>Snapshots</p>
           <pre><code>
 it('renders correctly', () =&gt; {
   const tree = renderer
@@ -235,10 +323,9 @@ it('renders correctly', () =&gt; {
 });
           </code></pre>
         </section>
-        <section></section>
         <section>
-          <section>TDD + pair programming</section>
           <section>
+            <p>TDD</p>
             <ul>
               <li>Создать тест</li>
               <li>Убедиться, что тест упал</li>
@@ -280,7 +367,12 @@ it('renders correctly', () =&gt; {
           <section>Тесты вперед != TDD</section>
         </section>
         <section>Тест на каждый баг</section>
-        <section>PropertyBased тестирование</section>
+        <section>
+          <p>PropertyBased тестирование</p>
+          <a href="https://youtu.be/H-cBhNMxlCw" target="_blank"
+            >youtu.be/H-cBhNMxlCw</a
+          >
+        </section>
         <section>Качетво тестов и покрытие (кейс гугл)</section>
         <section>
           <p>Вывод</p>
