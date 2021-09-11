@@ -290,7 +290,7 @@ $controlsArrowAngleActive: 36deg;
   display: none;
   position: absolute;
   top: auto;
-  bottom: $spacing;
+  bottom: $spacing * 2;
   right: $spacing;
   left: auto;
   z-index: 11;
@@ -614,7 +614,7 @@ $controlsArrowAngleActive: 36deg;
   line-height: 1;
   color: #fff;
   background-color: rgba(0, 0, 0, 0.4);
-  padding: 5px;
+  padding: 5px 10px;
 }
 
 .reveal .slide-number a {
