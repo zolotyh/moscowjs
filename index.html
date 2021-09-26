@@ -54,31 +54,26 @@
           </h1>
         </section>
         <section>
-          <figure>
-            <blockquote cite="https://www.huxley.net/bnw/four.html">
-              <p>
-                В советах нету благодати и большей частью пользы нет, и чем
-                дурак мудаковатей, тем он обильней на совет.
-              </p>
-            </blockquote>
-            <figcaption>— Игорь Губерман</figcaption>
-          </figure>
+          <h2>Прописные истины</h2>
+          Войны в песочнице и банальные фразы в воспитании
         </section>
-        <section>Про общественное мнение и реальность</section>
         <section>
           <h3>План</h3>
           <ul>
-            <li class="fragment">Про меня и автотесты</li>
+            <li class="fragment">Про тесты вообще</li>
             <li class="fragment">Unit</li>
+            <li class="fragment">TDD</li>
             <li class="fragment">E2E</li>
+            <li class="fragment">BDD</li>
+            <li class="fragment">Тестовая пирамида</li>
             <li class="fragment">Выводы</li>
           </ul>
         </section>
         <section data-background-color="#f7df1f">
-          <h2 class="r-fit-text">1. Моё понимание</h2>
+          <h2 class="r-fit-text">1. Про тесты</h2>
         </section>
         <section>
-          <p>Автотесты это автоматизация</p>
+          <h3>Тесты &mdash; автоматизация</h3>
         </section>
         <section>
           <h3>Очевидное</h3>
@@ -87,6 +82,7 @@
             <li class="fragment">Поиск новых багов</li>
             <li class="fragment">Повышение качества кода</li>
             <li class="fragment">Документация</li>
+            <li class="fragment">Быстрая обратная связь</li>
           </ul>
         </section>
         <section>
@@ -97,7 +93,10 @@
             <li class="fragment">Разработка в изоляции</li>
           </ul>
         </section>
-        <section>Хаос в терминах</section>
+        <section>
+          <h2>Классификация тестов</h2>
+          <p class="fragment">Нет никакой полной и вменяемой классификации</p>
+        </section>
         <section>
           <p>Какой тест модульный?</p>
           <div class="fragment">
@@ -140,21 +139,21 @@ test("Поле чудес! Теперь async", async () =&gt; {
         </section>
         <section>
           <h4>Хорошие тесты</h4>
-          <ul>
-            <li class="fragment">
-              Падают там, где действительно есть проблема
-            </li>
-            <li class="fragment">Окупаются</li>
-          </ul>
         </section>
+        <section>Cигнализация</section>
+        <section>Делают мир лучше</section>
+        <section>Выгодны</section>
         <section data-background-color="#f7df1f">
-          <h2 class="r-fit-text">2. Модульные тесты</h2>
+          <h2 class="r-fit-text">2. Unit</h2>
         </section>
         <section>
           <h4>Начало</h4>
+          <p>Надежность и качество</p>
+        </section>
+        <section data-background-color="#000000">
+          <h2 class="r-fit-text">Надежность и качество продукта</h2>
         </section>
         <section>
-          <p>Надежность</p>
           <pre><code data-trim>
 function isValidEmail(email) {
     const re = /^.../;
@@ -183,8 +182,19 @@ test("Should return true on hello@example.com", () =&gt;
 });
           </code></pre>
         </section>
+        <section data-background-color="#000000">
+          <h2 class="r-fit-text">Качество кода</h2>
+        </section>
+        <section data-transition="slide none">
+          <p>Фильтрация списка</p>
+          <img src="img/w1.png" alt="" />
+        </section>
+        <section data-transition="none slide">
+          <p>Фильтрация списка</p>
+          <img src="img/w2.png" alt="" />
+        </section>
         <section>
-          <pre><code data-trim data-line-numbers="8-21|8|1-6|16-20|17|18|11-13">
+          <pre><code data-trim data-line-numbers="8-21|9|17|18|11-13">
 const defaultItems = [
   'react',
   'angular',
@@ -244,8 +254,8 @@ expect(filter(list, "react").length)
           </code></pre>
         </section>
         <section>
-          <p>S из SOLID</p>
-          <pre><code data-trim data-line-numbers="1-8|3-5">
+          <p>Выделяем обособленные модули</p>
+          <pre><code data-trim data-line-numbers>
 const filter = (list, value) =&gt; {
   return list.filter(e =&gt; {
     if(isBlackListed(e)){
@@ -255,7 +265,7 @@ const filter = (list, value) =&gt; {
   })
 }
           </code></pre>
-          <pre class="fragment"><code data-trim data-line-numbers="1-8|1|4|6-7">
+          <pre class="fragment"><code data-trim data-line-numbers>
 jest.mock('./isBackListed');
 
 it("...", () =&gt; {
@@ -267,7 +277,7 @@ it("...", () =&gt; {
           </code></pre>
         </section>
         <section>
-          <p>I из SOLID</p>
+          <p>Не тащим в аргументы ненужное</p>
           <pre><code data-trim>
 const foo = (settings) =&gt; {
   const hasPermissions = settings
@@ -286,7 +296,7 @@ const mockSettings = {
           </code></pre>
         </section>
         <section>
-          <p>I из SOLID</p>
+          <p>Не тащим в аргументы ненужное</p>
           <pre><code data-trim>
 const foo = ({isAbleToRead}) =&gt; {/*...*/}
           </code></pre>
@@ -317,7 +327,10 @@ const foo = ({isAbleToRead}) =&gt; {/*...*/}
         </section>
         <section data-background-image="./img/research.png"></section>
         <section>
-          <p>Нужно ли покрывать эту функцию?</p>
+          <p>А что говорит здравый смысл?</p>
+        </section>
+        <section>
+          <p>Нужно ли покрывать?</p>
           <pre><code data-trim data-line-numbers="1-8|3|5">
 const setUpAxios =  ({ baseURL }) =&gt; {
 
@@ -347,24 +360,35 @@ axios.createInstance.mockReturnedValue(mock);
 expect(axiosInterceptorMock).toHaveBeenCalled();
           </code></pre>
         </section>
-        <!--<section>-->
-        <!--<pre><code data-trim>-->
-        <!--export const Button = ({ buttonType, children,  ...props }) =&gt; {-->
-        <!--return (-->
-        <!--&lt;button-->
-        <!--className={classNames({ [buttonType]: true, })}-->
-        <!--{...props}-->
-        <!--&gt;-->
-        <!--{ children }-->
-        <!--&lt;/button&gt;-->
-        <!--);-->
-        <!--};-->
-        <!--</code></pre>-->
-        <!--</section>-->
         <section>
           <p>Вредно тестировать имплементацию!</p>
         </section>
         <section>Тестируйте контракты</section>
+        <section>
+          <p>
+            Если контракта нет, есть смысл тестировать более высокий уровень
+          </p>
+        </section>
+        <section>
+          <pre><code data-trim>
+test('loads and displays greeting', async () =&gt; {
+  render(&lt;FetchGreeting /&gt;)
+
+  userEvent.click(screen.getByText('Load Greeting'))
+
+  await screen.findByRole('heading')
+
+  expect(screen.getByRole('heading')).toHaveTextContent('hello there')
+  expect(screen.getByRole('button')).toHaveAttribute('disabled')
+})
+          </code></pre>
+          <p>
+            Требования к виджету будут изменяться реже чем требования к коду
+          </p>
+        </section>
+        <section>
+          Но высокоуровневые тесты более хрупки, поэтому нужно найти баланс
+        </section>
         <section>
           <p>Snapshots</p>
           <pre><code>
@@ -380,10 +404,13 @@ it('renders correctly', () =&gt; {
 });
           </code></pre>
         </section>
+        <section data-background-color="#f7df1f">
+          <h2 class="r-fit-text">3. TDD</h2>
+        </section>
         <section>Принцип Питера</section>
-        <section>
+        <section data-transition="slide none">
           <p>TDD</p>
-          <ul class="fragment">
+          <ul>
             <li class="fragment">Создать тест</li>
             <li class="fragment">Убедиться, что тест упал</li>
             <li class="fragment">Внести изменения</li>
@@ -392,6 +419,21 @@ it('renders correctly', () =&gt; {
               Провести рефакторинг для устранения дублирования
             </li>
           </ul>
+        </section>
+        <section data-transition="none">
+          <p>TDD</p>
+          <ul>
+            <li><mark>Создать тест</mark></li>
+            <li>Убедиться, что тест упал</li>
+            <li><mark>Внести изменения</mark></li>
+            <li><mark>Убедиться что тест прошел</mark></li>
+            <li>Провести рефакторинг для устранения дублирования</li>
+          </ul>
+        </section>
+        <section>
+          <p>
+            Писат нужно минимально необходимый код для того, чтобы прошел тест
+          </p>
         </section>
         <section>
           <pre><code data-trim>
@@ -411,7 +453,7 @@ const sum = () =&gt; 3;
           <ul>
             <li class="fragment">Проработка кейсов</li>
             <li class="fragment">Документация к пулреквесту</li>
-            <li class="fragment">Пишешь сразу по SRP</li>
+            <li class="fragment">Тестируемый код</li>
             <li class="fragment">Можно рефакторить надежно</li>
           </ul>
         </section>
@@ -423,6 +465,7 @@ const sum = () =&gt; 3;
             <li class="fragment">Не для стартапов</li>
             <li class="fragment">Смещает фокус с основной идеи</li>
             <li class="fragment">Растет кодовая база</li>
+            <li class="fragment">Дофаминовая яма</li>
           </ul>
         </section>
         <section>
@@ -467,6 +510,32 @@ const sum = () =&gt; 3;
             >bit.ly/3E5IzGt</a
           >
         </section>
+        <section>
+          <p>Еще одно исследование</p>
+          <p>
+            статья -
+            <a href="https://bit.ly/3lYN6Co" target="_blank">bit.ly/3lYN6Co</a>
+          </p>
+          <p>
+            первоисточник -
+            <a
+              href="https://www.microsoft.com/en-us/research/wp-content/uploads/2009/10/Realizing-Quality-Improvement-Through-Test-Driven-Development-Results-and-Experiences-of-Four-Industrial-Teams-nagappan_tdd.pdf"
+              target="_blank"
+              >bit.ly/3ufcGHe</a
+            >
+          </p>
+        </section>
+        <section data-background-image="./img/tdd1.png"></section>
+        <section>
+          <blockquote>
+            Drawing <b>general conclusions</b> from empirical studies in
+            software engineering is <b>difficult</b> because any process depends
+            to a large degree on a potentially
+            <b>large number of relevant context variables</b>. For this reason,
+            we cannot assume a priori that the results of a study generalize
+            beyond the specific environment in which it was conducted
+          </blockquote>
+        </section>
         <section>Тесты вперед !== TDD</section>
         <section>Тест на каждый баг</section>
         <section>
@@ -481,8 +550,9 @@ const Foo = ({user}) =&gt; &lt;div&gt;{user.userrname}&lt;/div&gt;
             >youtu.be/H-cBhNMxlCw</a
           >
         </section>
+        <section data-background-image="./img/int.png"></section>
         <section>
-          <p>Unit тесты. Выводы</p>
+          <p>Низкоуровневые тесты. Выводы</p>
           <ul>
             <li class="fragment">Полезны</li>
             <li class="fragment">Покрытие &mdash; доверяй, но проверяй</li>
@@ -495,9 +565,9 @@ const Foo = ({user}) =&gt; &lt;div&gt;{user.userrname}&lt;/div&gt;
           <p>Как делаю я</p>
           <ul>
             <li class="fragment">Сначала проектирую</li>
-            <li class="fragment">Тесты вперед</li>
+            <li class="fragment">Тесты вперед, но не TDD</li>
             <li class="fragment">Использую Wallaby.js</li>
-            <li class="fragment">React Testing Library или аналог</li>
+            <li class="fragment">Нет контракта - повышаю уровень</li>
             <li class="fragment">Тесты на бизнес логику</li>
             <li class="fragment">Тесты на регулярки и алгоритмы</li>
             <li class="fragment">Использую типизацию</li>
@@ -505,9 +575,8 @@ const Foo = ({user}) =&gt; &lt;div&gt;{user.userrname}&lt;/div&gt;
           </ul>
         </section>
         <section data-background-color="#f7df1f">
-          <h2 class="r-fit-text">3. E2E</h2>
+          <h2 class="r-fit-text">4. E2E</h2>
         </section>
-        <section>2 Истории</section>
         <section>
           <h4>История 1</h4>
           <p>Сначала были написаны тест кейсы, потом автоматизация</p>
@@ -557,12 +626,14 @@ test("Should return true on hello@example.com", () =&gt;
             <li class="fragment">Не все кейсы покрыты</li>
           </ul>
         </section>
+        <section data-background-color="#f7df1f">
+          <h2 class="r-fit-text">5. BDD</h2>
+        </section>
         <section>
           <h4>BDD</h4>
           <p class="fragment">BDD !== TDD</p>
           <img class="fragment" src="img/bdd.png" alt="BDD Example" />
         </section>
-        <section>BDD/TDD &mdash; золотой штангенциркуль</section>
         <section>
           <p>Я</p>
           <ul>
@@ -584,6 +655,9 @@ test("Should return true on hello@example.com", () =&gt;
             <li class="fragment">Не нужно относиться как к Unit</li>
           </ul>
         </section>
+        <section data-background-color="#f7df1f">
+          <h2 class="r-fit-text">6. Тестовая пирамида</h2>
+        </section>
         <section>
           <p>О соотношении тестов в проекте</p>
           <img src="img/py.jpeg" alt="test pyramid" />
@@ -596,10 +670,11 @@ test("Should return true on hello@example.com", () =&gt;
           <img src="img/py.jpeg" alt="test pyramid" />
         </section>
         <section data-background-color="#f7df1f">
-          <h2 class="r-fit-text">4. Вместо вывода</h2>
+          <h2 class="r-fit-text">7. Вместо вывода</h2>
         </section>
         <section>
-          <p>Нужно понимать до</p>
+          <p></p>
+          <p></p>
           <ul>
             <li class="fragment">Размер кодовой базы</li>
             <li class="fragment">Размер команды</li>
